@@ -14,23 +14,23 @@ int readBookList(struct book books[]) {
     int n = 0;
     char buffer[200];
     while (fgets(buffer, 200, file1)) {
-        char *token = strtok(buffer, " ");
+        char *token = strtok(buffer, ",");
         if (token) {
             id = atoi(token);
         }
-        token = strtok(NULL, " ");
+        token = strtok(NULL, ",");
         if (token) {
             strcpy(name, token);
         }
-        token = strtok(NULL, " ");
+        token = strtok(NULL, ",");
         if (token) {
             strcpy(author, token);
         }
-        token = strtok(NULL, " ");
+        token = strtok(NULL, ",");
         if (token) {
             strcpy(genre, token);
         }
-        token = strtok(NULL, " ");
+        token = strtok(NULL, ",");
         if (token) {
             noOfCopies = atoi(token);
         }
