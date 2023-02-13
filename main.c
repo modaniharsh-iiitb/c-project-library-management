@@ -18,15 +18,15 @@ int readBookList(struct book books[]) {
         if (token) {
             id = atoi(token);
         }
-        token = strtok(NULL, ",");
+        token = strtok(NULL, " ");
         if (token) {
             strcpy(name, token);
         }
-        token = strtok(NULL, ",");
+        token = strtok(NULL, " ");
         if (token) {
             strcpy(author, token);
         }
-        token = strtok(NULL, ",");
+        token = strtok(NULL, " ");
         if (token) {
             strcpy(genre, token);
         }
