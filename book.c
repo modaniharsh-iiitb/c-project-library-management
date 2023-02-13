@@ -26,40 +26,34 @@ struct book getBookByID(struct book books[], int n, int id) {
     return voidBook;
 }
 
-int setName(struct book books[], int n, int id, char name[]) {
-    // returns 0 whenever the details are updated successfully and -1 whenever it is not (i.e. book not found)
+int addBook(struct book books[], int n, struct book book1) {
+    // returns 0 whenever the book is added successfully and -1 whenever it is not
+    // increment n whenever this function is called
 
-    for (int i = 0; i < n; i++) {
-        if (books[i].id == id) {
-            strcpy(books[i].name, name);
-            return 0;
-        }
+    if (n >= 100) {
+        printf("Too many books added already!\n");
+        return -1;
     }
-    return -1;
+    books[n] = book1;
+    return 0;
 }
 
-int setAuthor(struct book books[], int n, int id, char author[]) {
-    // returns 0 whenever the details are updated successfully and -1 whenever it is not (i.e. book not found)
+int removeBook(struct book books[], int n, int index) {
+    // returns 0 whenever the book is removed successfully and -1 whenever it is not
+    // decrement n whenever this function is called
 
-    for (int i = 0; i < n; i++) {
-        if (books[i].id == id) {
-            strcpy(books[i].author, author);
-            return 0;
-        }
+    if (n == 0) {
+        printf("No books present; books cannot be removed!\n");
+        return -1;
     }
-    return -1;
-}
-
-int setGenre(struct book books[], int n, int id, char genre[]) {
-    // returns 0 whenever the details are updated successfully and -1 whenever it is not (i.e. book not found)
-
-    for (int i = 0; i < n; i++) {
-        if (books[i].id == id) {
-            strcpy(books[i].genre, genre);
-            return 0;
-        }
+    if (index < 0 || index >= n) {
+        printf("Index is too large; there are only %d books!\n", n);
+        return -1;
     }
-    return -1;
+    for (int i = index; i < n; i++) {
+        books[i] = books[i+1];
+    }
+    return 0;
 }
 
 int addCopy(struct book books[], int n, int id) {
@@ -94,34 +88,4 @@ int removeCopy(struct book books[], int n, int id) {
         }
     }
     return -1;
-}
-
-int addBook(struct book books[], int n, struct book book1) {
-    // returns 0 whenever the book is added successfully and -1 whenever it is not
-    // increment n whenever this function is called
-
-    if (n >= 100) {
-        printf("Too many books added already!\n");
-        return -1;
-    }
-    books[n] = book1;
-    return 0;
-}
-
-int removeBook(struct book books[], int n, int index) {
-    // returns 0 whenever the book is removed successfully and -1 whenever it is not
-    // decrement n whenever this function is called
-
-    if (n == 0) {
-        printf("No books present; books cannot be removed!\n");
-        return -1;
-    }
-    if (index < 0 || index >= n) {
-        printf("Index is too large; there are only %d books!\n", n);
-        return -1;
-    }
-    for (int i = index; i < n; i++) {
-        books[i] = books[i+1];
-    }
-    return 0;
 }
