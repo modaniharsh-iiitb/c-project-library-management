@@ -16,12 +16,6 @@ struct book {
 
 struct book getBookByID(struct book books[], int n, int id);
 
-int setName(struct book books[], int n, int id, char name[]);
-
-int setAuthor(struct book books[], int n, int id, char author[]);
-
-int setGenre(struct book books[], int n, int id, char genre[]);
-
 int addCopy(struct book books[], int n, int id);
 
 int removeCopy(struct book books[], int n, int id);
