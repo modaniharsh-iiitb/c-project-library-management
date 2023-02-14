@@ -9,28 +9,41 @@ int readBookList(struct book books[]) {
     int n = 0;
     char buffer[300];
     while (fgets(buffer, 200, file1)) {
-        struct book member1;
+        struct book book1;
+        int noOfCopies = 0;
         char *token = strtok(buffer, ",");
 
         if (token)
-            member1.id = atoi(token);
+            book1.id = atoi(token);
         token = strtok(NULL, ",");
         if (token)
-            strcpy(member1.name, token);
+            strcpy(book1.name, token);
         token = strtok(NULL, ",");
         if (token)
-            strcpy(member1.author, token);
+            strcpy(book1.author, token);
         token = strtok(NULL, ",");
         if (token)
-            strcpy(member1.genre, token);
+            strcpy(book1.genre, token);
         token = strtok(NULL, ",");
-        if (token)
-            member1.noOfCopies = atoi(token);
+
+        while ((token = strtok(NULL, ","))) {
+            char *token1 = strtok(token, ":");
+            if (token1)
+                book1.copies[noOfCopies].bookID = atoi(token1);
+            token1 = strtok(NULL, ":");
+            if (token1)
+                book1.copies[noOfCopies].copyID = atoi(token1);
+            book1.copies[noOfCopies].isIssued = 1;
+            token1 = strtok(NULL, ":");
+            if (token1)
+                strcpy(book1.copies[noOfCopies].dateIssued, token1);
+            noOfCopies++;
+        }
         
-        for (int i = 0; i < (10 < member1.noOfCopies ? 10 : member1.noOfCopies); i++)
-            member1.copies[i] = (struct copy) {.bookID = member1.id, .copyID = i+1, .isIssued = 0, .dateIssued = ""};
+        for (int i = 0; i < (10 < book1.noOfCopies ? 10 : book1.noOfCopies); i++)
+            book1.copies[i] = (struct copy) {.bookID = book1.id, .copyID = i+1, .isIssued = 0, .dateIssued = ""};
         
-        addBook(books, n, member1);
+        addBook(books, n, book1);
         n++;
     }
     return n;
@@ -80,7 +93,16 @@ void __onClose(int code, struct book books[], struct member members[], int noOfB
     if (code == 0) {
         FILE *file1 = fopen("_books", "w");
         for (int i = 0; i < noOfBooks; i++) {
-            fprintf(file1, "%d,%s,%s,%s,%d\n", books[i].id, books[i].name, books[i].author, books[i].genre, books[i].noOfCopies);
+            fprintf(file1, "%d,%s,%s,%s,", books[i].id, books[i].name, books[i].author, books[i].genre);
+            for (int j = 0; j < books[i].noOfCopies; j++) {
+                fprintf(file1, "%d:%d:%s",
+                    books[i].copies[j].bookID,
+                    books[i].copies[j].copyID,
+                    books[i].copies[j].isIssued,
+                    books[i].copies[j].dateIssued);
+                if (j != members[i].noOfCopiesIssued-1)
+                    fprintf(file1, ",");
+            }
         }
         fclose(file1);
         file1 = fopen("_members", "w");
@@ -90,6 +112,7 @@ void __onClose(int code, struct book books[], struct member members[], int noOfB
                 fprintf(file1, "%d:%d:%s",
                     members[i].copiesIssued[j].bookID,
                     members[i].copiesIssued[j].copyID,
+                    members[i].copiesIssued[j].isIssued,
                     members[i].copiesIssued[j].dateIssued);
                 if (j != members[i].noOfCopiesIssued-1)
                     fprintf(file1, ",");

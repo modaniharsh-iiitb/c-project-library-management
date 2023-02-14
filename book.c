@@ -89,3 +89,12 @@ int removeCopy(struct book books[], int n, int id) {
     }
     return -1;
 }
+
+int copiesAvailable(struct book book1) {
+    int count = 0;
+    for (int i = 0; i < book1.noOfCopies; i++) {
+        if (!book1.copies[i].isIssued)
+            count++;
+    }
+    return count;
+}
