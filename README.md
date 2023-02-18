@@ -8,6 +8,4 @@ $ make main
 $ ./a.out
 ```
 
-Before committing, tell Harsh.
-
-Also, he'll make a Makefile later, so that it's easier to run.
+Before committing, tell Harsh. And *make sure* it runs.

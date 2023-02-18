@@ -1,3 +1,4 @@
 _books
 _members
 *.out
+.vscode/
