@@ -4,13 +4,13 @@
 
 #include "member.h"
 
+// function to be called to read the file "_books"
 int readBookList(struct book books[]) {
     FILE *file1 = fopen("_books", "r");
     int n = 0;
     char buffer[300];
     while (fgets(buffer, 200, file1)) {
         struct book book1;
-        int noOfCopies = 0;
         char *token = strtok(buffer, ",");
 
         if (token)
@@ -25,23 +25,23 @@ int readBookList(struct book books[]) {
         if (token)
             strcpy(book1.genre, token);
         token = strtok(NULL, ",");
+        if (token)
+            book1.noOfCopies = atoi(token);
 
-        while ((token = strtok(NULL, ","))) {
+        for (int i = 0; i < book1.noOfCopies; i++) {
             char *token1 = strtok(token, ":");
             if (token1)
-                book1.copies[noOfCopies].bookID = atoi(token1);
+                book1.copies[i].bookID = atoi(token1);
             token1 = strtok(NULL, ":");
             if (token1)
-                book1.copies[noOfCopies].copyID = atoi(token1);
-            book1.copies[noOfCopies].isIssued = 1;
+                book1.copies[i].copyID = atoi(token1);
             token1 = strtok(NULL, ":");
             if (token1)
-                strcpy(book1.copies[noOfCopies].dateIssued, token1);
-            noOfCopies++;
+                book1.copies[i].copyID = atoi(token1);
+            token1 = strtok(NULL, ":");
+            if (token1)
+                strcpy(book1.copies[i].dateIssued, token1);
         }
-        
-        for (int i = 0; i < (10 < book1.noOfCopies ? 10 : book1.noOfCopies); i++)
-            book1.copies[i] = (struct copy) {.bookID = book1.id, .copyID = i+1, .isIssued = 0, .dateIssued = ""};
         
         addBook(books, n, book1);
         n++;
@@ -49,13 +49,13 @@ int readBookList(struct book books[]) {
     return n;
 }
 
+// function to be called to read the file "_members"
 int readMemberList(struct member members[]) {
     FILE *file1 = fopen("_members", "r");
     int n = 0;
     char buffer[300];
     while (fgets(buffer, 200, file1)) {
         struct member member1;
-        int noOfCopiesIssued = 0;
         char *token = strtok(buffer, ",");
 
         if (token)
@@ -63,19 +63,22 @@ int readMemberList(struct member members[]) {
         token = strtok(NULL, ",");
         if (token)
             strcpy(member1.name, token);
+        token = strtok(NULL, ",");
+        if (token)
+            member1.noOfCopiesIssued = atoi(token);
+        
 
-        while ((token = strtok(NULL, ","))) {
+        for (int i = 0; i < member1.noOfCopiesIssued; i++) {
             char *token1 = strtok(token, ":");
             if (token1)
-                member1.copiesIssued[noOfCopiesIssued].bookID = atoi(token1);
+                member1.copiesIssued[i].bookID = atoi(token1);
             token1 = strtok(NULL, ":");
             if (token1)
-                member1.copiesIssued[noOfCopiesIssued].copyID = atoi(token1);
-            member1.copiesIssued[noOfCopiesIssued].isIssued = 1;
+                member1.copiesIssued[i].copyID = atoi(token1);
+            member1.copiesIssued[i].isIssued = 1;
             token1 = strtok(NULL, ":");
             if (token1)
-                strcpy(member1.copiesIssued[noOfCopiesIssued].dateIssued, token1);
-            noOfCopiesIssued++;
+                strcpy(member1.copiesIssued[i].dateIssued, token1);
         }
 
         addMember(members, n, member1);
@@ -84,32 +87,32 @@ int readMemberList(struct member members[]) {
     return n;
 }
 
-void __onInit(int *noOfBooks, int *noOfMembers, struct book books[], struct member members[]) {
-    *noOfBooks = readBookList(books);
-    *noOfMembers = readMemberList(members);
-}
-
-void __onClose(int code, struct book books[], struct member members[], int noOfBooks, int noOfMembers) {
-    if (code == 0) {
-        FILE *file1 = fopen("_books", "w");
+// function to be called to write into the file "_books"
+void writeBookList(struct book books[], int noOfBooks) {
+    FILE *file1 = fopen("_books", "w");
         for (int i = 0; i < noOfBooks; i++) {
             fprintf(file1, "%d,%s,%s,%s,", books[i].id, books[i].name, books[i].author, books[i].genre);
             for (int j = 0; j < books[i].noOfCopies; j++) {
-                fprintf(file1, "%d:%d:%s",
+                fprintf(file1, "%d:%d:%d:%s",
                     books[i].copies[j].bookID,
                     books[i].copies[j].copyID,
                     books[i].copies[j].isIssued,
                     books[i].copies[j].dateIssued);
-                if (j != members[i].noOfCopiesIssued-1)
+                if (j != books[i].noOfCopies-1)
                     fprintf(file1, ",");
             }
+            fprintf(file1, "\n");
         }
-        fclose(file1);
-        file1 = fopen("_members", "w");
+    fclose(file1);
+}
+
+// function to be called to write into the file "_members"
+void writeMemberList(struct member members[], int noOfMembers) {
+    FILE *file1 = fopen("_members", "w");
         for (int i = 0; i < noOfMembers; i++) {
             fprintf(file1, "%d,%s,", members[i].id, members[i].name);
             for (int j = 0; j < members[i].noOfCopiesIssued; j++) {
-                fprintf(file1, "%d:%d:%s",
+                fprintf(file1, "%d:%d:%d:%s",
                     members[i].copiesIssued[j].bookID,
                     members[i].copiesIssued[j].copyID,
                     members[i].copiesIssued[j].isIssued,
@@ -119,6 +122,21 @@ void __onClose(int code, struct book books[], struct member members[], int noOfB
             }
             fprintf(file1, "\n");
         }
+    fclose(file1);
+}
+
+// function to be called on initiation of the program
+void __onInit(int *noOfBooks, int *noOfMembers, struct book books[], struct member members[]) {
+    *noOfBooks = readBookList(books);
+    *noOfMembers = readMemberList(members);
+}
+
+// function to be called on exit of the program
+void __onClose(int code, struct book books[], struct member members[], int noOfBooks, int noOfMembers) {
+    // code = 0 is successful exit
+    if (code == 0) {
+        writeBookList(books, noOfBooks);
+        writeMemberList(members, noOfMembers);
     } else {
         exit(0);
     }
