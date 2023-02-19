@@ -23,3 +23,5 @@ int removeCopy(struct book books[], int n, int id);
 int addBook(struct book books[], int n, struct book book1);
 
 int removeBook(struct book books[], int n, int index);
+
+int copiesAvailable(struct book book1);
