@@ -37,7 +37,7 @@ int readBookList(struct book books[]) {
                 book1.copies[i].copyID = atoi(token1);
             token1 = strtok(NULL, ":");
             if (token1)
-                book1.copies[i].copyID = atoi(token1);
+                book1.copies[i].isIssued = atoi(token1);
             token1 = strtok(NULL, ":");
             if (token1)
                 strcpy(book1.copies[i].dateIssued, token1);
@@ -93,39 +93,59 @@ int readMemberList(struct member members[]) {
 // function to be called to write into the file "_books"
 void writeBookList(struct book books[], int noOfBooks) {
     FILE *file1 = fopen("_books", "w");
-        for (int i = 0; i < noOfBooks; i++) {
-            fprintf(file1, "%d,%s,%s,%s,", books[i].id, books[i].name, books[i].author, books[i].genre);
-            for (int j = 0; j < books[i].noOfCopies; j++) {
-                fprintf(file1, "%d:%d:%d:%s",
-                    books[i].copies[j].bookID,
-                    books[i].copies[j].copyID,
-                    books[i].copies[j].isIssued,
-                    books[i].copies[j].dateIssued);
-                if (j != books[i].noOfCopies-1)
-                    fprintf(file1, ",");
-            }
-            fprintf(file1, "\n");
+    for (int i = 0; i < noOfBooks; i++) {
+        fprintf(file1, "%d,%s,%s,%s,%d,", books[i].id, books[i].name, books[i].author, books[i].genre, books[i].noOfCopies);
+        for (int j = 0; j < books[i].noOfCopies; j++) {
+            fprintf(file1, "%d:%d:%d:%s",
+                books[i].copies[j].bookID,
+                books[i].copies[j].copyID,
+                books[i].copies[j].isIssued,
+                books[i].copies[j].dateIssued);
+            if (j != books[i].noOfCopies-1)
+                fprintf(file1, ",");
         }
+        fprintf(file1, "\n");
+    }
     fclose(file1);
 }
 
 // function to be called to write into the file "_members"
 void writeMemberList(struct member members[], int noOfMembers) {
     FILE *file1 = fopen("_members", "w");
-        for (int i = 0; i < noOfMembers; i++) {
-            fprintf(file1, "%d,%s,%s,", members[i].id, members[i].name, members[i].password);
-            for (int j = 0; j < members[i].noOfCopiesIssued; j++) {
-                fprintf(file1, "%d:%d:%d:%s",
-                    members[i].copiesIssued[j].bookID,
-                    members[i].copiesIssued[j].copyID,
-                    members[i].copiesIssued[j].isIssued,
-                    members[i].copiesIssued[j].dateIssued);
-                if (j != members[i].noOfCopiesIssued-1)
-                    fprintf(file1, ",");
-            }
-            fprintf(file1, "\n");
+    for (int i = 0; i < noOfMembers; i++) {
+        fprintf(file1, "%d,%s,%s,", members[i].id, members[i].name, members[i].password);
+        for (int j = 0; j < members[i].noOfCopiesIssued; j++) {
+            fprintf(file1, "%d:%d:%d:%s",
+                members[i].copiesIssued[j].bookID,
+                members[i].copiesIssued[j].copyID,
+                members[i].copiesIssued[j].isIssued,
+                members[i].copiesIssued[j].dateIssued);
+            if (j != members[i].noOfCopiesIssued-1)
+                fprintf(file1, ",");
         }
+        fprintf(file1, "\n");
+    }
     fclose(file1);
+}
+
+void printBookList(struct book books[], int noOfBooks) {
+    printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+------------------+\n");
+    printf("| ID  | Name                                               | Author                                   | Genre                | Copies Available |\n");
+    printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+------------------+\n");
+    for (int i = 0; i < noOfBooks; i++) {
+        printf("| %3d | %50s | %40s | %20s | %16d |\n", books[i].id, books[i].name, books[i].author, books[i].genre, copiesAvailable(books[i]));
+    }
+    printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+------------------+\n");
+}
+
+void printMemberList(struct member members[], int noOfMembers) {
+    printf("+-----+----------------------------------------------------+---------------+\n");
+    printf("| ID  | Name                                               | Copies Issued |\n");
+    printf("+-----+----------------------------------------------------+---------------+\n");
+    for (int i = 0; i < noOfMembers; i++) {
+        printf("| %3d | %50s | %13d |\n", members[i].id, members[i].name, members[i].noOfCopiesIssued);
+    }
+    printf("+-----+----------------------------------------------------+---------------+\n");
 }
 
 // function to be called on initiation of the program
@@ -134,6 +154,10 @@ void __onInit(int *noOfBooks, int *noOfMembers, struct book books[], struct memb
     *noOfMembers = readMemberList(members);
     FILE *file1 = fopen("_password", "r");
     fscanf(file1, "%s", password);
+
+    // remove later
+    printBookList(books, *noOfBooks);
+    printMemberList(members, *noOfMembers);
 }
 
 // function to be called on exit of the program
@@ -144,6 +168,38 @@ void __onClose(int code, struct book books[], struct member members[], int noOfB
         writeMemberList(members, noOfMembers);
     } else {
         exit(0);
+    }
+}
+
+int __librarianLogin(char passwd[]) {
+    while (1) {
+        char s[30];
+        printf("Enter the password, enter -1 to exit.\n> ");
+        scanf("%s", s);
+        if (!strcmp(s, "-1"))
+            return -1;
+        if (!strcmp(s, passwd))
+            return 0;
+        printf("You have entered the incorrect password.\n\n");
+    }
+}
+
+int __librarianLoop() {
+    // returns 0 to break
+
+}
+
+int __choose(char passwd[]) {
+    char choice;
+    printf("Enter 1 if you are a librarian and 2 if you are a member:\n> ");
+    scanf("%c", &choice);
+    if (choice == '1') {
+        int m = __librarianLogin(passwd);
+        if (!m)
+            return 0;
+        while (m)
+            m = __librarianLoop();
+    } else {
     }
 }
 
