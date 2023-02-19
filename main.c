@@ -126,9 +126,11 @@ void writeMemberList(struct member members[], int noOfMembers) {
 }
 
 // function to be called on initiation of the program
-void __onInit(int *noOfBooks, int *noOfMembers, struct book books[], struct member members[]) {
+void __onInit(int *noOfBooks, int *noOfMembers, struct book books[], struct member members[], char password[]) {
     *noOfBooks = readBookList(books);
     *noOfMembers = readMemberList(members);
+    FILE *file1 = fopen("_password", "r");
+    fscanf(file1, "%s", password);
 }
 
 // function to be called on exit of the program
@@ -147,9 +149,13 @@ int main() {
     struct book books[100]; // assumed here that the number of books never exceeds 100 initially; the condition is later checked with addBook()
     struct member members[100]; // assumed here that the number of members never exceeds 100 initially; the condition is later checked with addMember()
     int noOfBooks, noOfMembers;
+    char passwd[30];
+    int code;
 
     // starting running block
-    __onInit(&noOfBooks, &noOfMembers, books, members);
+    __onInit(&noOfBooks, &noOfMembers, books, members, passwd);
+
+    // looping through control
 
     // ending running block
     __onClose(0, books, members, noOfBooks, noOfMembers);

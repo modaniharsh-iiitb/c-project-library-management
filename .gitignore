@@ -1,4 +1,5 @@
 _books
 _members
+_password
 *.out
 .vscode/
