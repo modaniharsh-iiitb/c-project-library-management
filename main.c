@@ -65,6 +65,9 @@ int readMemberList(struct member members[]) {
             strcpy(member1.name, token);
         token = strtok(NULL, ",");
         if (token)
+            strcpy(member1.password, token);
+        token = strtok(NULL, ",");
+        if (token)
             member1.noOfCopiesIssued = atoi(token);
         
 
@@ -110,7 +113,7 @@ void writeBookList(struct book books[], int noOfBooks) {
 void writeMemberList(struct member members[], int noOfMembers) {
     FILE *file1 = fopen("_members", "w");
         for (int i = 0; i < noOfMembers; i++) {
-            fprintf(file1, "%d,%s,", members[i].id, members[i].name);
+            fprintf(file1, "%d,%s,%s,", members[i].id, members[i].name, members[i].password);
             for (int j = 0; j < members[i].noOfCopiesIssued; j++) {
                 fprintf(file1, "%d:%d:%d:%s",
                     members[i].copiesIssued[j].bookID,

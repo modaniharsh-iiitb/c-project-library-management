@@ -8,6 +8,7 @@
 struct member {
     int id;
     char name[50];
+    char password[30];
     int noOfCopiesIssued;
     struct copy copiesIssued[5];
 };
