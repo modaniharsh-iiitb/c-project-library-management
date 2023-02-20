@@ -13,6 +13,7 @@ int readBookList(struct book books[]) {
         struct book book1;
         char *token = strtok(buffer, ",");
 
+        // 
         if (token)
             book1.id = atoi(token);
         token = strtok(NULL, ",");
