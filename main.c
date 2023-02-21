@@ -186,7 +186,7 @@ int __librarianLogin(char passwd[]) {
 }
 
 int __librarianLoop() {
-    // returns 0 to break
+    // returns -1 to break
 
 }
 
@@ -196,9 +196,9 @@ int __choose(char passwd[]) {
     scanf("%c", &choice);
     if (choice == '1') {
         int m = __librarianLogin(passwd);
-        if (!m)
+        if (m == -1)
             return 0;
-        while (m)
+        while (!m)
             m = __librarianLoop();
     } else {
     }
