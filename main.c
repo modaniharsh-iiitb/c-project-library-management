@@ -185,23 +185,44 @@ int __librarianLogin(char passwd[]) {
     }
 }
 
+int __memberLogin() {
+    // returns -1 if the member wants to exit without logging in, 0 if they log in successfully
+
+}
+
 int __librarianLoop() {
-    // returns 0 to break
+    // returns -1 to break
+
+}
+
+int __memberLoop() {
+    // returns -1 to break
 
 }
 
 int __choose(char passwd[]) {
     char choice;
-    printf("Enter 1 if you are a librarian and 2 if you are a member:\n> ");
-    scanf("%c", &choice);
-    if (choice == '1') {
-        int m = __librarianLogin(passwd);
-        if (!m)
+    while (1) {
+        printf("Enter 1 if you are a librarian and 2 if you are a member. Enter 0 to exit.:\n> ");
+        scanf("%c", &choice);
+        if (choice == '1') {
+            int m = __librarianLogin(passwd);
+            if (m == -1)
+                return 0;
+            while (!m)
+                m = __librarianLoop();
+        } else if (choice == '2') {
+            int m = __memberLogin();
+            if (m == -1)
+                return 0;
+            while (!m)
+                m = __memberLoop();
+        } else if (choice == '0')
             return 0;
-        while (m)
-            m = __librarianLoop();
-    } else {
+        else
+            printf("Invalid input.\n\n"); 
     }
+    return 0;
 }
 
 int main() {
@@ -216,7 +237,8 @@ int main() {
     __onInit(&noOfBooks, &noOfMembers, books, members, passwd);
 
     // looping through control
+    code = __choose(passwd);
 
     // ending running block
-    __onClose(0, books, members, noOfBooks, noOfMembers);
+    __onClose(code, books, members, noOfBooks, noOfMembers);
 }
