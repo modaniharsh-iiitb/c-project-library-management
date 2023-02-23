@@ -185,9 +185,23 @@ int __librarianLogin(char passwd[]) {
     }
 }
 
-int __memberLogin() {
+int __memberLogin(struct member members[],int noOfMembers) {
     // returns -1 if the member wants to exit without logging in, 0 if they log in successfully
-
+    while (1) {
+	    int t;
+	    char passwd[30];
+	    printf("Enter your ID, enter -1 to exit: ");
+	    scanf("%d", t);
+	    printf("Enter your password: ");
+	    scanf("%s", passwd);
+	    if (t == -1)
+		    return -1;
+	    for (int i = 0; i < noOfMembers; i++) {
+		    if (t == members[i].id && !strcmp(passwd, members[i].password))
+			    return 0;
+	    }
+	    printf("You have entered the incorrect ID or password.\n\n");
+    } 
 }
 
 int __librarianLoop() {
