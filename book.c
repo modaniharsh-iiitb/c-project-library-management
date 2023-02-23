@@ -11,18 +11,18 @@ struct book {
     char author[40];
     char genre[20];
     int noOfCopies;
-    struct copy copies[10];
+    struct copy *copies;
 };
 
-struct book getBookByID(struct book books[], int n, int id) {
+struct book *getBookByID(struct book books[], int n, int id) {
     // returns book with ID -1 whenever it is not found
 
     for (int i = 0; i < n; i++) {
         if (books[i].id == id)
-            return books[i];
+            return &(books[i]);
     }
-    struct book voidBook;
-    voidBook.id = -1;
+    struct book *voidBook=malloc(sizeof(struct book));
+    voidBook->id = -1;
     return voidBook;
 }
 

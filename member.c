@@ -10,18 +10,18 @@ struct member {
     char name[50];
     char password[30];
     int noOfCopiesIssued;
-    struct copy copiesIssued[5];
+    struct copy *copiesIssued;
 };
 
-struct member getMemberByID(struct member members[], int n, int id) {
+struct member *getMemberByID(struct member members[], int n, int id) {
     // returns member with ID -1 whenever it is not found
 
     for (int i = 0; i < n; i++) {
         if (members[i].id == id)
-            return members[i];
+            return &(members[i]);
     }
-    struct member voidMember;
-    voidMember.id = -1;
+    struct member *voidMember=malloc(sizeof(struct member));
+    voidMember->id = -1;
     return voidMember;
 }
 
