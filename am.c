@@ -1,23 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "member.h"
+
+#include "utils.h"
+
 #define MAX_ATTEMPTS 5  // maximum number of attempts to enter old password
-
-int addMember(struct member members[], int n, struct member member1) {
-    // returns 0 whenever the member is added successfully and -1 whenever it is not
-    // increment n whenever this function is called
-
-    if (n >= 100) {
-        printf("Too many members added already!\n");
-        return -1;
-    }
-    // Copy the new member into the next available slot in the array
-    strncpy(&members[n], &member1, sizeof(struct member));
-    
-    // Increment the count of members in the array
-    return n + 1;
-}
 
 //to change password        
 
@@ -35,7 +22,7 @@ void change_password(struct member *m) {
     // loop until correct old password is entered or maximum attempts reached
     while (strcmp(old_password, m->password) != 0) {
         attempts_left--;  // decrement attempts left
-        printf("Incorrect password (%d attempts left)\n", attempts_left);
+        printf("Incorrect password (%d attempts left).\n\n", attempts_left);
 
         // check if maximum attempts reached
         if (attempts_left == 0) {

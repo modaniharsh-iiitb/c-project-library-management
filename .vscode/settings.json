@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "typeinfo": "c",
-        "book.h": "c"
+        "book.h": "c",
+        "member.h": "c"
     }
 }

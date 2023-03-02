@@ -2,18 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "member.h"
+#include "utils.h"
 
-// function to be called to read the file "_books"
-int readBookList(struct book books[]) {
+// function to be called to read the files "_books" and "_copies"
+void readBookList(struct book books[], int *noOfBooks) {
     FILE *file1 = fopen("_books", "r");
     int n = 0;
     char buffer[300];
-    while (fgets(buffer, 200, file1)) {
+    while (fgets(buffer, 250, file1)) {
         struct book book1;
         char *token = strtok(buffer, ",");
 
-        // 
         if (token)
             book1.id = atoi(token);
         token = strtok(NULL, ",");
@@ -28,30 +27,43 @@ int readBookList(struct book books[]) {
         token = strtok(NULL, ",");
         if (token)
             book1.noOfCopies = atoi(token);
-
-        for (int i = 0; i < book1.noOfCopies; i++) {
-            char *token1 = strtok(token, ":");
-            if (token1)
-                book1.copies[i].bookID = atoi(token1);
-            token1 = strtok(NULL, ":");
-            if (token1)
-                book1.copies[i].copyID = atoi(token1);
-            token1 = strtok(NULL, ":");
-            if (token1)
-                book1.copies[i].isIssued = atoi(token1);
-            token1 = strtok(NULL, ":");
-            if (token1)
-                strcpy(book1.copies[i].dateIssued, token1);
-        }
         
         addBook(books, n, book1);
         n++;
     }
-    return n;
+    fclose(file1);
+    *noOfBooks = n;
+
+    file1 = fopen("_copies", "r");
+    while (fgets(buffer, 200, file1)) {
+        struct copy copy1;
+        int nc = 0;
+        char *token = strtok(buffer, ",");
+
+        if (token)
+            copy1.bookID = atoi(token);
+        token = strtok(NULL, ",");
+        if (token)
+            copy1.copyID = atoi(token);
+        token = strtok(NULL, ",");
+        if (token)
+            copy1.isIssued = atoi(token);
+        token = strtok(NULL, ",");
+        if (token)
+            strcpy(copy1.dateIssued, token);
+        token = strtok(NULL, ",");
+        if (token)
+            strcpy(copy1.dueDate, token);
+        
+        struct book *b = getBookByID(books, noOfBooks, copy1.bookID);
+        b->copies[nc] = copy1;
+        nc++;
+    }
+    fclose(file1);
 }
 
 // function to be called to read the file "_members"
-int readMemberList(struct member members[]) {
+void readMemberList(struct member members[], int *noOfMembers) {
     FILE *file1 = fopen("_members", "r");
     int n = 0;
     char buffer[300];
@@ -88,24 +100,29 @@ int readMemberList(struct member members[]) {
         addMember(members, n, member1);
         n++;
     }
-    return n;
+    *noOfMembers = n;
 }
 
 // function to be called to write into the file "_books"
 void writeBookList(struct book books[], int noOfBooks) {
     FILE *file1 = fopen("_books", "w");
     for (int i = 0; i < noOfBooks; i++) {
-        fprintf(file1, "%d,%s,%s,%s,%d,", books[i].id, books[i].name, books[i].author, books[i].genre, books[i].noOfCopies);
+        fprintf(file1, "%d,%s,%s,%s,%d\n", books[i].id, books[i].name, books[i].author, books[i].genre, books[i].noOfCopies);
+    }
+    fclose(file1);
+
+    file1 = fopen("_copies", "w");
+    for (int i = 0; i < noOfBooks; i++) {
         for (int j = 0; j < books[i].noOfCopies; j++) {
-            fprintf(file1, "%d:%d:%d:%s",
+            fprintf(file1, "%d,%d,%d,%s,%s",
                 books[i].copies[j].bookID,
                 books[i].copies[j].copyID,
                 books[i].copies[j].isIssued,
-                books[i].copies[j].dateIssued);
+                books[i].copies[j].dateIssued,
+                books[i].copies[j].dueDate);
             if (j != books[i].noOfCopies-1)
                 fprintf(file1, ",");
         }
-        fprintf(file1, "\n");
     }
     fclose(file1);
 }
@@ -134,7 +151,7 @@ void printBookList(struct book books[], int noOfBooks) {
     printf("| ID  | Name                                               | Author                                   | Genre                | Copies Available |\n");
     printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+------------------+\n");
     for (int i = 0; i < noOfBooks; i++) {
-        printf("| %3d | %50s | %40s | %20s | %16d |\n", books[i].id, books[i].name, books[i].author, books[i].genre, copiesAvailable(books[i]));
+        printf("| %-3d | %-50s | %-40s | %-20s | %-16d |\n", books[i].id, books[i].name, books[i].author, books[i].genre, copiesAvailable(books[i]));
     }
     printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+------------------+\n");
 }
@@ -151,8 +168,8 @@ void printMemberList(struct member members[], int noOfMembers) {
 
 // function to be called on initiation of the program
 void __onInit(int *noOfBooks, int *noOfMembers, struct book books[], struct member members[], char password[]) {
-    *noOfBooks = readBookList(books);
-    *noOfMembers = readMemberList(members);
+    readBookList(books, noOfBooks);
+    readMemberList(members, noOfMembers);
     FILE *file1 = fopen("_password", "r");
     fscanf(file1, "%s", password);
 
@@ -175,7 +192,7 @@ void __onClose(int code, struct book books[], struct member members[], int noOfB
 int __librarianLogin(char passwd[]) {
     while (1) {
         char s[30];
-        printf("Enter the password, enter -1 to exit.\n> ");
+        printf("Enter the password, enter -1 to exit: ");
         scanf("%s", s);
         if (!strcmp(s, "-1"))
             return -1;
@@ -214,7 +231,7 @@ int __memberLoop() {
 
 }
 
-int __choose(char passwd[]) {
+int __choose(char passwd[], struct member members[], int noOfMembers) {
     char choice;
     while (1) {
         printf("Enter 1 if you are a librarian and 2 if you are a member. Enter 0 to exit.:\n> ");
@@ -226,7 +243,7 @@ int __choose(char passwd[]) {
             while (!m)
                 m = __librarianLoop();
         } else if (choice == '2') {
-            int m = __memberLogin();
+            int m = __memberLogin(members, noOfMembers);
             if (m == -1)
                 return 0;
             while (!m)
@@ -251,7 +268,7 @@ int main() {
     __onInit(&noOfBooks, &noOfMembers, books, members, passwd);
 
     // looping through control
-    code = __choose(passwd);
+    code = __choose(passwd, members, noOfMembers);
 
     // ending running block
     __onClose(code, books, members, noOfBooks, noOfMembers);
