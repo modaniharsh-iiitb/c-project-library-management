@@ -189,48 +189,6 @@ void __onClose(int code, struct book books[], struct member members[], int noOfB
     }
 }
 
-int __librarianLogin(char passwd[]) {
-    while (1) {
-        char s[30];
-        printf("Enter the password, enter -1 to exit: ");
-        scanf("%s", s);
-        if (!strcmp(s, "-1"))
-            return -1;
-        if (!strcmp(s, passwd))
-            return 0;
-        printf("You have entered the incorrect password.\n\n");
-    }
-}
-
-int __memberLogin(struct member members[],int noOfMembers) {
-    // returns -1 if the member wants to exit without logging in, 0 if they log in successfully
-    while (1) {
-	    int t;
-	    char passwd[30];
-	    printf("Enter your ID, enter -1 to exit: ");
-	    scanf("%d", t);
-	    printf("Enter your password: ");
-	    scanf("%s", passwd);
-	    if (t == -1)
-		    return -1;
-	    for (int i = 0; i < noOfMembers; i++) {
-		    if (t == members[i].id && !strcmp(passwd, members[i].password))
-			    return 0;
-	    }
-	    printf("You have entered the incorrect ID or password.\n\n");
-    } 
-}
-
-int __librarianLoop() {
-    // returns -1 to break
-
-}
-
-int __memberLoop() {
-    // returns -1 to break
-
-}
-
 int __choose(char passwd[], struct member members[], int noOfMembers) {
     char choice;
     while (1) {

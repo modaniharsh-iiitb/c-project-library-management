@@ -54,3 +54,8 @@ char *getNextDate(char date[]);
 int compareDates(char date1[], char date2[]);
 
 int diffBtwDates(char date1[], char date2[]);
+
+// from librarianfunctions.c
+int __librarianLogin(char passwd[]);
+
+int __librarianLoop();
