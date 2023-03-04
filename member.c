@@ -9,7 +9,7 @@ struct member {
     char name[50];
     char password[30];
     int noOfCopiesIssued;
-    struct copy *copiesIssued;
+    struct copy *copiesIssued[5];
 };
 
 struct member *getMemberByID(struct member members[], int n, int id) {

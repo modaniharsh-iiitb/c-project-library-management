@@ -10,7 +10,7 @@ struct book {
     char author[40];
     char genre[20];
     int noOfCopies;
-    struct copy *copies;
+    struct copy copies[5];
 };
 
 struct book *getBookByID(struct book books[], int n, int id) {
