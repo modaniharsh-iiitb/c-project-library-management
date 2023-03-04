@@ -4,3 +4,4 @@ _members
 _password
 *.out
 .vscode/
+.vs/
