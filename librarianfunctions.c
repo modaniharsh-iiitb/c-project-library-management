@@ -36,7 +36,7 @@ int __librarianLoop() {
         else if (option == 5) // allows members to change password
         {
         }
-        else if (option == 6) // option is any other number
+        else if (option == 6) //exit
             return -1;
         else
             printf("No such option\n");
