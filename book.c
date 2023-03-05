@@ -1,17 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "utils.h"
-
-// structure describing a book
-struct book {
-    int id;
-    char name[50];
-    char author[40];
-    char genre[20];
-    int noOfCopies;
-    struct copy copies[5];
-};
 
 struct book *getBookByID(struct book books[], int n, int id) {
     // returns book with ID -1 whenever it is not found

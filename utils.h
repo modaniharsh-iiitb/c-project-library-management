@@ -1,3 +1,12 @@
+// from copy.c
+struct copy {
+    int bookID;
+    int copyID;
+    int isIssued;
+    char dateIssued[11];
+    char dueDate[11];
+};
+
 // from book.c
 struct book {
     int id;
@@ -5,7 +14,7 @@ struct book {
     char author[40];
     char genre[20];
     int noOfCopies;
-    struct copy *copies;
+    struct copy copies[5];
 };
 
 struct book *getBookByID(struct book books[], int n, int id);
@@ -20,22 +29,13 @@ int removeBook(struct book books[], int n, int index);
 
 int copiesAvailable(struct book book1);
 
-// from copy.c
-struct copy {
-    int bookID;
-    int copyID;
-    int isIssued;
-    char dateIssued[11];
-    char dueDate[11];
-};
-
 // from member.c
 struct member {
     int id;
     char name[50];
     char password[30];
     int noOfCopiesIssued;
-    struct copy *copiesIssued;
+    struct copy *copiesIssued[5];
 };
 
 struct member *getMemberByID(struct member members[], int n, int id);
@@ -58,4 +58,22 @@ int diffBtwDates(char date1[], char date2[]);
 // from librarianfunctions.c
 int __librarianLogin(char passwd[]);
 
-int __librarianLoop();
+int __librarianLoop(struct book books[], int *noOfBooks, struct member members[], int *noOfMembers, char passwd[]);
+
+// from memberfunctions.c
+struct member __memberLogin(struct member members[], int noOfMembers);
+
+int __memberLoop(struct book books[], int noOfBooks, struct member member1);
+
+// from io.c
+void readBookList(struct book books[], int *noOfBooks);
+
+void readMemberList(struct member members[], int *noOfMembers, struct book books[], int noOfBooks);
+
+void writeBookList(struct book books[], int noOfBooks);
+
+void writeMemberList(struct member members[], int noOfMembers);
+
+void printBookList(struct book books[], int noOfBooks);
+
+void printMemberList(struct member members[], int noOfMembers);

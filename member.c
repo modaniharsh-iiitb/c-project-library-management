@@ -1,16 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "utils.h"
-
-// structure describing a member
-struct member {
-    int id;
-    char name[50];
-    char password[30];
-    int noOfCopiesIssued;
-    struct copy *copiesIssued[5];
-};
 
 struct member *getMemberByID(struct member members[], int n, int id) {
     // returns member with ID -1 whenever it is not found

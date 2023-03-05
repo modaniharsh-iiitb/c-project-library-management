@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "utils.h"
 
@@ -39,19 +40,20 @@ char *getDueDate(char dateIssued[]) {
         year++;
     }
     char *dueDate = malloc(11 * sizeof(char));
-    dueDate[2] = '/';
-    dueDate[5] = '/';
-    dueDate[0] = day / 10 + '0';
-    dueDate[1] = day % 10 + '0';
-    dueDate[3] = month / 10 + '0';
-    dueDate[4] = month % 10 + '0';
-    dueDate[6] = year / 1000 + '0';
-    year = year % 1000;
-    dueDate[7] = year / 100 + '0';
-    year = year % 100;
-    dueDate[8] = year / 10 + '0';
-    dueDate[9] = year % 10 + '0';
-    dueDate[10] = '\0';
+    // dueDate[2] = '/';
+    // dueDate[5] = '/';
+    // dueDate[0] = day / 10 + '0';
+    // dueDate[1] = day % 10 + '0';
+    // dueDate[3] = month / 10 + '0';
+    // dueDate[4] = month % 10 + '0';
+    // dueDate[6] = year / 1000 + '0';
+    // year = year % 1000;
+    // dueDate[7] = year / 100 + '0';
+    // year = year % 100;
+    // dueDate[8] = year / 10 + '0';
+    // dueDate[9] = year % 10 + '0';
+    // dueDate[10] = '\0';
+    sprintf(dueDate, "%02d/%02d/%4d", day, month, year);
     return dueDate;
 }
 
@@ -85,19 +87,21 @@ char *getNextDate(char date[]) {
         year++;
     }
     char *nextDate = malloc(11 * sizeof(char));
-    nextDate[2] = '/';
-    nextDate[5] = '/';
-    nextDate[0] = day / 10 + '0';
-    nextDate[1] = day % 10 + '0';
-    nextDate[3] = month / 10 + '0';
-    nextDate[4] = month % 10 + '0';
-    nextDate[6] = year / 1000 + '0';
-    year = year % 1000;
-    nextDate[7] = year / 100 + '0';
-    year = year % 100;
-    nextDate[8] = year / 10 + '0';
-    nextDate[9] = year % 10 + '0';
-    nextDate[10] = '\0';
+    // nextDate[2] = '/';
+    // nextDate[5] = '/';
+    // nextDate[0] = day / 10 + '0';
+    // nextDate[1] = day % 10 + '0';
+    // nextDate[3] = month / 10 + '0';
+    // nextDate[4] = month % 10 + '0';
+    // nextDate[6] = year / 1000 + '0';
+    // year = year % 1000;
+    // nextDate[7] = year / 100 + '0';
+    // year = year % 100;
+    // nextDate[8] = year / 10 + '0';
+    // nextDate[9] = year % 10 + '0';
+    // nextDate[10] = '\0';
+    sprintf(nextDate, "%02d/%02d/%4d", day, month, year);
+
     return nextDate;
 }
 
