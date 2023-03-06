@@ -332,7 +332,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">datefunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">datefunctions.c</span>
 </summary>
 <br>
 
@@ -344,7 +344,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">librarianfunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">librarianfunctions.c</span>
 </summary>
 <br>
 
@@ -353,7 +353,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">memberfunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">memberfunctions.c</span>
 </summary>
 <br>
 
@@ -364,7 +364,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">io.c</span>
+<span style="font-size=18px; font-weight=bold;">io.c</span>
 </summary>
 <br>
 
@@ -375,7 +375,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">librarianfunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">librarianfunctions.c</span>
 </summary>
 <br>
 
@@ -384,7 +384,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">datefunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">datefunctions.c</span>
 </summary>
 <br>
 
@@ -394,11 +394,11 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 ### 3. IMT2022028 Nikita Kiran
 
-<span style="font-size=18px;">Makefile</span>
+<span style="font-size=18px; font-weight=bold;">Makefile</span>
 
 <details>
 <summary>
-<span style="font-size=18px;">datefunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">datefunctions.c</span>
 </summary>
 <br>
 
@@ -410,7 +410,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">librarianfunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">librarianfunctions.c</span>
 </summary>
 <br>
 
@@ -421,7 +421,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">memberfunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">memberfunctions.c</span>
 </summary>
 <br>
 
@@ -432,11 +432,11 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 ### 4. IMT2022055 Harsh Modani
 
-<span style="font-size=18px;">README.md</span>
+<span style="font-size=18px; font-weight=bold;">README.md</span>
 
 <details>
 <summary>
-<span style="font-size=18px;">io.c</span>
+<span style="font-size=18px; font-weight=bold;">io.c</span>
 </summary>
 <br>
 
@@ -448,7 +448,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">libraryfunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">libraryfunctions.c</span>
 </summary>
 <br>
 
@@ -458,7 +458,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">memberfunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">memberfunctions.c</span>
 </summary>
 <br>
 
@@ -467,11 +467,11 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 ### 5. IMT2022114 Dhruv Kothari
 
-<span style="font-size=18px;">utils.h</span>
+<span style="font-size=18px; font-weight=bold;">utils.h</span>
 
 <details>
 <summary>
-<span style="font-size=18px;">book.c</span>
+<span style="font-size=18px; font-weight=bold;">book.c</span>
 </summary>
 <br>
 
@@ -483,7 +483,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">member.c</span>
+<span style="font-size=18px; font-weight=bold;">member.c</span>
 </summary>
 <br>
 
@@ -494,7 +494,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">librarianfunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">librarianfunctions.c</span>
 </summary>
 <br>
 
@@ -503,7 +503,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">memberfunctions.c</span>
+<span style="font-size=18px; font-weight=bold;">memberfunctions.c</span>
 </summary>
 <br>
 1. `void changePassword(member *m)`
@@ -511,7 +511,7 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 <details>
 <summary>
-<span style="font-size=18px;">main.c</span>
+<span style="font-size=18px; font-weight=bold;">main.c</span>
 </summary>
 <br>
 
