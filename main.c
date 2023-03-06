@@ -55,7 +55,7 @@ void __choose(char passwd[], member members[], int *noOfMembers, book books[], i
 }
 
 // Made by Aryan Mishra
-int main() {
+void main() {
     // declarations
     book books[100]; // assumed here that the number of books never exceeds 100 initially; the condition is later checked with addBook()
     member members[100]; // assumed here that the number of members never exceeds 100 initially; the condition is later checked with addMember()
