@@ -10,110 +10,64 @@ int isLeapYear(int year) {
     return 0;
 }
 
-char *getDueDate(char dateIssued[]) {
-    int day = (dateIssued[0] - '0') * 10 + dateIssued[1] - '0';
-    int month = (dateIssued[3] - '0') * 10 + dateIssued[4] - '0';
-    int year = (dateIssued[6] - '0') * 1000 + (dateIssued[7] - '0') * 100 + (dateIssued[8] - '0') * 10 + (dateIssued[9] - '0');
-    day = day + 7;
-    int numOfDays = 31;
-    switch (month)
-    {
-    case 2:
-        numOfDays = 28;
-        if (isLeapYear(year))
-            numOfDays++;
-        break;
-    case 4:
-    case 6:
-    case 9:
-    case 11:
-        numOfDays = 30;
-    }
-    if (day > numOfDays)
-    {
-        day = day - numOfDays;
-        month++;
-    }
-    if (month > 12)
-    {
-        month = month - 12;
-        year++;
-    }
-    char *dueDate = malloc(11 * sizeof(char));
-    // dueDate[2] = '/';
-    // dueDate[5] = '/';
-    // dueDate[0] = day / 10 + '0';
-    // dueDate[1] = day % 10 + '0';
-    // dueDate[3] = month / 10 + '0';
-    // dueDate[4] = month % 10 + '0';
-    // dueDate[6] = year / 1000 + '0';
-    // year = year % 1000;
-    // dueDate[7] = year / 100 + '0';
-    // year = year % 100;
-    // dueDate[8] = year / 10 + '0';
-    // dueDate[9] = year % 10 + '0';
-    // dueDate[10] = '\0';
-    sprintf(dueDate, "%02d/%02d/%4d", day, month, year);
-    return dueDate;
+void dateConverter(char *date, int *day, int *month, int *year) {
+    /*A function that inflates the values of three integers - day, month and year -
+        given a string date input*/
+
+    *day = (date[0]-'0') * 10 + (date[1]-'0');
+    *month = (date[3]-'0') * 10 + (date[4]-'0');
+    *year = (date[6]-'0') * 1000 + (date[7]-'0') * 100 + (date[8]-'0') * 10 + (date[9]-'0');
 }
 
-char *getNextDate(char date[]) {
-    int day = (date[0] - '0') * 10 + date[1] - '0';
-    int month = (date[3] - '0') * 10 + date[4] - '0';
-    int year = (date[6] - '0') * 1000 + (date[7] - '0') * 100 + (date[8] - '0') * 10 + (date[9] - '0');
-    day = day + 1;
+char *getDueDate(char dateIssued[]) {
+    /* A function that calculates the due date of a book given the issue date.
+        The due date is 7 days from the date of issue.*/
+
+    return getNextDate(dateIssued, 7);
+}
+
+char *getNextDate(char date[], int n) {
+    /* A function that calculates the date n days after the given date.*/
+
+    int day, month, year;
+    dateConverter(date, &day, &month, &year);
+
+    day = day + n;
     int numOfDays = 31;
-    switch (month)
-    {
-    case 2:
-        numOfDays = 28;
-        if (isLeapYear(year))
-            numOfDays++;
-        break;
-    case 4:
-    case 6:
-    case 9:
-    case 11:
-        numOfDays = 30;
+    switch (month) {
+        case 2:
+            numOfDays = 28;
+            if (isLeapYear(year))
+                numOfDays++;
+            break;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            numOfDays = 30;
     }
-    if (day > numOfDays)
-    {
+    if (day > numOfDays) {
         day = day - numOfDays;
         month++;
     }
-    if (month > 12)
-    {
+    if (month > 12) {
         month = month - 12;
         year++;
     }
     char *nextDate = malloc(11 * sizeof(char));
-    // nextDate[2] = '/';
-    // nextDate[5] = '/';
-    // nextDate[0] = day / 10 + '0';
-    // nextDate[1] = day % 10 + '0';
-    // nextDate[3] = month / 10 + '0';
-    // nextDate[4] = month % 10 + '0';
-    // nextDate[6] = year / 1000 + '0';
-    // year = year % 1000;
-    // nextDate[7] = year / 100 + '0';
-    // year = year % 100;
-    // nextDate[8] = year / 10 + '0';
-    // nextDate[9] = year % 10 + '0';
-    // nextDate[10] = '\0';
-    sprintf(nextDate, "%02d/%02d/%4d", day, month, year);
+    sprintf(nextDate, "%02d/%02d/%04d", day, month, year);
 
     return nextDate;
 }
 
 int compareDates(char date1[], char date2[]) {
-    // returns 0 if both are equal; 1 if first date is greater; 2 if second date is greater
+    /* A function that compares the two given dates. It returns 0 if both are equal,
+       1 if date1 is greater and 2 if date2 is greater.*/ 
 
-    int day1 = (date1[0] - '0') * 10 + date1[1] - '0';
-    int month1 = (date1[3] - '0') * 10 + date1[4] - '0';
-    int year1 = (date1[6] - '0') * 1000 + (date1[7] - '0') * 100 + (date1[8] - '0') * 10 + (date1[9] - '0');
-    int day2 = (date2[0] - '0') * 10 + date2[1] - '0';
-    int month2 = (date2[3] - '0') * 10 + date2[4] - '0';
-    int year2 = (date2[6] - '0') * 1000 + (date2[7] - '0') * 100 + (date2[8] - '0') * 10 + (date2[9] - '0');
+    int day1, day2, month1, month2, year1, year2;
+    dateConverter(date1, &day1, &month1, &year1);
+    dateConverter(date2, &day2, &month2, &year2);
+
     if (year1 > year2)
         return 1;
     else if (year2 > year1)
@@ -123,8 +77,7 @@ int compareDates(char date1[], char date2[]) {
             return 1;
         else if (month2 > month1)
             return 2;
-        else
-        {
+        else {
             if (day1 > day2)
                 return 1;
             else if (day2 > day1)
@@ -136,16 +89,17 @@ int compareDates(char date1[], char date2[]) {
 }
 
 int diffBtwDates(char date1[], char date2[]) {
-    // assumes date1 is less than or equal to date2
+    /* A function that calculates the number of days between two given dates.
+        It assumes that date1 is less than or equal to date2, and the arguments
+        in the rest of the code are passed accordingly.*/
 
     int i = 0;
     char currDate[11];
     strcpy(currDate, date1);
-    while (1)
-    {
+    while (1) {
         if (!compareDates(currDate, date2))
             return i;
-        strcpy(currDate, getNextDate(currDate));
+        strcpy(currDate, getNextDate(currDate, 1));
         i++;
     }
 }

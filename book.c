@@ -4,83 +4,118 @@
 
 #include "utils.h"
 
-struct book *getBookByID(struct book books[], int n, int id) {
-    // returns book with ID -1 whenever it is not found
+book *getBookByID(book books[], int n, int id) {
+    /*A function that returns a pointer to the book that has its ID equal to the input
+        ID. It returns a pointer to a new book with ID -1 if no such book is found.*/
 
     for (int i = 0; i < n; i++) {
         if (books[i].id == id)
             return &(books[i]);
     }
-    struct book *voidBook=malloc(sizeof(struct book));
+    book *voidBook = malloc(sizeof(book));
     voidBook->id = -1;
     return voidBook;
 }
 
-int addBook(struct book books[], int n, struct book book1) {
-    // returns 0 whenever the book is added successfully and -1 whenever it is not
-    // increment n whenever this function is called
+int addBook(book books[], int *noOfBooks, book book1) {
+    /*A function that adds a new book to the list of books. It returns 0 if a book
+        is added successfully and -1 if it is not.*/
 
-    if (n >= 100) {
+    if (*noOfBooks >= 100) {
         printf("Too many books added already!\n");
         return -1;
     }
-    books[n] = book1;
+    books[(*noOfBooks)++] = book1;
     return 0;
 }
 
-int removeBook(struct book books[], int n, int index) {
-    // returns 0 whenever the book is removed successfully and -1 whenever it is not
-    // decrement n whenever this function is called
+int addCopy(book *book1, int copyID) {
+    /*A function that adds a new copy of a book. It returns 0 if a copy
+        is added successfully and -1 if it is not.*/
 
-    if (n == 0) {
-        printf("No books present; books cannot be removed!\n");
+    if (book1->noOfCopies == 5) {
+        printf("Too many copies added already!\n");
         return -1;
     }
-    if (index < 0 || index >= n) {
-        printf("Index is too large; there are only %d books!\n", n);
+    book1->copies[book1->noOfCopies++] = (copy){.bookID = book1->id, .copyID = copyID, .isIssued = 0, .dateIssued = "00/00/0000", .dueDate = "00/00/0000", .memberIDIssued = -1};
+    return 0;
+}
+
+int removeCopy(book books[], int *noOfBooks, book *book1, member members[], int noOfMembers, int copyID) {
+    /*A function that removes a copy of a book. It returns 0 if the copy
+        is removed successfully and -1 if it is not.*/
+
+    int index;
+    int isFound = 0;
+    for (index = 0; index < book1->noOfCopies; index++) {
+        if (book1->copies[index].copyID == copyID) {
+            isFound = 1;
+            break;
+        }
+    }
+    if (!isFound) {
+        printf("Copy with ID %d does not exist.\n\n", copyID);
         return -1;
     }
-    for (int i = index; i < n; i++) {
-        books[i] = books[i+1];
+    if (book1->copies[index].isIssued) {
+        printf("Cannot remove this copy as it is currently issued.\n\n");
+        return -1;
+    }
+    book1->noOfCopies--;
+
+    for (int i = index; i < book1->noOfCopies; i++) {
+        book1->copies[i] = book1->copies[i + 1];
+        if (book1->copies[i].memberIDIssued != -1) {
+            member *m = getMemberByID(members, noOfMembers, book1->copies[i].memberIDIssued);
+            for (int j = 0; j < m->noOfCopiesIssued; j++) {
+                if (m->copiesIssued[j] == &(book1->copies[i]) + 1)
+                    m->copiesIssued[j]--;
+            }
+        }
+    }
+    if (!(book1->noOfCopies)) {
+        printf("That was the last copy of this book! Removing the book as well.\n");
+        return removeBook(books, noOfBooks, book1->id);
     }
     return 0;
 }
 
-int addCopy(struct book books[], int n, int id) {
-    // returns 0 whenever the copy is removed successfully and -1 whenever it is not
+int removeBook(book books[], int *noOfBooks, int bookID) {
+    /*A function that removes a book to the list of books. It returns 0 if a book
+        is removed successfully and -1 if it is not.*/
 
-    for (int i = 0; i < n; i++) {
-        if (books[i].id == id) {
-            if (books[i].noOfCopies < 10) {
-                books[i].noOfCopies++;
-                books[i].copies[books[i].noOfCopies-1] = (struct copy) {.bookID = books[i].id, .copyID = books[i].noOfCopies, .isIssued = 0, .dateIssued = ""};
-                return 0;
-            } else {
-                printf("Too many copies already! The maximum the library can hold is 10.\n");
-                return -1;
-            }
+    if (!(*noOfBooks)) {
+        printf("No books present; books cannot be removed.\n\n");
+        return -1;
+    }
+    int index = 0;
+    int isFound = 0;
+    for (index = 0; index < *noOfBooks; index++) {
+        if (books[index].id == bookID) {
+            isFound = 1;
+            break;
         }
     }
-    return -1;
-}
-
-int removeCopy(struct book books[], int n, int id) {
-    // returns 0 whenever the copy is removed successfully and -1 whenever it is not
-
-    for (int i = 0; i < n; i++) {
-        if (books[i].id == id) {
-            books[i].noOfCopies--;
-            if (books[i].noOfCopies == 0) {
-                removeBook(books, n, i);
-                return 1;
-            }
-            return 0;
+    if (!isFound) {
+        printf("Book with ID %d not found.\n\n", bookID);
+        return -1;
+    }
+    for (int i = 0; i < books[index].noOfCopies; i++) {
+        if (books[index].copies[i].isIssued) {
+            printf("Cannot remove this book as there is a copy issued of it already.\n\n");
+            return -1;
         }
     }
-    return -1;
+    (*noOfBooks)--;
+    for (int i = index; i < *noOfBooks; i++)
+        books[i] = books[i + 1];
+    return 0;
 }
 
-int copiesAvailable(struct book book1) {
+int copiesAvailable(book book1) {
+    /*A function that calculates the number of copies not issued (and thus available
+        for issue) of a given book.*/
+
     int count = 0;
     for (int i = 0; i < book1.noOfCopies; i++) {
         if (!book1.copies[i].isIssued)

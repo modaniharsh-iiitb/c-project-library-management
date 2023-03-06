@@ -7,8 +7,12 @@
 
 #define MAX_ATTEMPTS 5  // maximum number of attempts to enter old password
 
-struct member __memberLogin(struct member members[], int noOfMembers) {
-    // returns -1 if the member wants to exit without logging in, 0 if they log in successfully
+member *__memberLogin(member members[], int noOfMembers) {
+    /* A function to log in as a member. This method takes in a password
+        and user ID and verifies it against the member table. If the ID exists 
+        and the password matches, the user is logged in as the member with the
+        given member ID. */
+
     while (1) {
 	    int t;
 	    char passwd[30];
@@ -17,76 +21,132 @@ struct member __memberLogin(struct member members[], int noOfMembers) {
 	    printf("Enter your password: ");
 	    scanf("%s", passwd);
 	    if (t == -1) {
-		    struct member voidMember;
-            voidMember.id = -1;
+		    member *voidMember = (member *) malloc(sizeof(member));
+            voidMember->id = -1;
             return voidMember;
         }
 	    for (int i = 0; i < noOfMembers; i++) {
-		    if (t == members[i].id && !strcmp(passwd, members[i].password))
-			    return members[i];
+		    if (t == members[i].id && !strcmp(passwd, members[i].password)) {
+                printf("Logged in successfully.\n\n");
+			    return &(members[i]);
+            }
 	    }
 	    printf("You have entered the incorrect ID or password.\n\n");
     } 
 }
 
-int issueBook(struct member *member1, int bookID, struct book books[], int noOfBooks, char date[]) {
-    // returns 0 if successfully issued, -1 otherwise
+void changePassword(member *m) {
+    /* A funciton to change the member's password. This method takes in the old
+        password and verifies it against the current one. If they match, the librarian
+        can set a new password by typing it.*/
+    
+    char old_password[30], new_password[30];
+    int attempts_left = MAX_ATTEMPTS;
+
+    printf("Enter old password: ");
+    scanf("\n%[^\n]%*c", old_password);
+
+    while (strcmp(old_password, m->password)) {
+        attempts_left--;
+        printf("Incorrect password (%d attempts left).\n\n", attempts_left);
+
+        if (attempts_left == 0) {
+            printf("Maximum attempts reached. Password change aborted.\n");
+            return;
+        }
+
+        printf("Enter old password: ");
+        scanf("\n%[^\n]%*c", old_password);
+    }
+
+    printf("Enter new password: ");
+    scanf("\n%[^\n]%*c", new_password);
+    strcpy(m->password, new_password);
+    printf("Password changed successfully.\n\n");
+}
+
+void issueBook(member *member1, book books[], int noOfBooks, char date[]) {
+    /*A function to issue a book to a member, provided it has available copies.*/
+
     if (member1->noOfCopiesIssued == 5)
     {
-        printf("You have already reached the maximum limit of issued books!\n");
-        return -1;
+        printf("You have already reached the maximum limit of issued books.\n");
+        return;
     }
-    struct book *book1 = getBookByID(books, noOfBooks, bookID);
-    if (copiesAvailable(*book1) == 0)
-    {
-        printf("No copies of the book are currently available!\n");
-        return -1;
+    int bookid;
+    printf("Enter the ID of the book you want to issue (enter -1 to cancel): ");
+    scanf("%d", &bookid);
+    if (bookid == -1)
+        return;
+    book *book1 = getBookByID(books, noOfBooks, bookid);
+    if (book1->id == -1) {
+        printf("Invalid book ID.\n");
+        return;
     }
-    for (int i = 0; i < book1->noOfCopies; i++)
-    {
-        if (!book1->copies[i].isIssued)
-        {
+    if (copiesAvailable(*book1) == 0) {
+        printf("No copies of the book are currently available.\n");
+        return;
+    }
+    for (int i = 0; i < book1->noOfCopies; i++) {
+        if (!book1->copies[i].isIssued) {
             book1->copies[i].isIssued = 1;
             strcpy(book1->copies[i].dateIssued, date);
             strcpy(book1->copies[i].dueDate, getDueDate(date));
+            book1->copies[i].memberIDIssued = member1->id;
             member1->copiesIssued[member1->noOfCopiesIssued] = &(book1->copies[i]);
             member1->noOfCopiesIssued++;
-            return 0;
+            printf("Book issued successfully.\n\n");
+            return;
         }
     }
 }
 
-int returnBook(struct member *member1, int bookID, struct book books[], int noOfBooks, char currDate[]) {
-    // returns 0 if successfully returned, -1 otherwise
+void returnBook(member *member1, book books[], int noOfBooks, char currDate[]) {
+    /*A function to return a book, provided the given member has issued it.*/
+
     int num = member1->noOfCopiesIssued;
+    if (!num) {
+        printf("You have no issued books.\n\n");
+        return;
+    }
+    int bookid;
+    printf("Enter the ID of the book you want to return: ");
+    scanf("%d", &bookid);
     for (int i = 0; i < num; i++) {
-        if (member1->copiesIssued[i]->bookID == bookID) {
-            if (compareDates(member1->copiesIssued[i]->dueDate, currDate) != 2) {
-                member1->copiesIssued[i]->isIssued = 0;
-                strcpy(member1->copiesIssued[i]->dateIssued, "");
-                strcpy(member1->copiesIssued[i]->dueDate, "");
-                member1->noOfCopiesIssued--;
-                return 0;
+        if (member1->copiesIssued[i]->bookID == bookid) {
+            if (compareDates(member1->copiesIssued[i]->dueDate, currDate) == 2) {
+                int diff = diffBtwDates(member1->copiesIssued[i]->dueDate, currDate);
+                printf("This book is overdue by %d day(s). You need to pay a fine of Rs. %d.\nPay fine? (y/n): ",diff,5*diff);
+                char choice;
+                scanf("\n%c", &choice);
+                if (choice != 'y') {
+                    printf("Book not returned.\n\n");
+                    return;
+                }
+                printf("Fine paid successfully.\n");
             }
-            int diff=diffBtwDates(member1->copiesIssued[i]->dueDate, currDate);
-            printf("This book is overdue by %d days. You need to pay a fine of Rs.%d.\nPay fine(y/n) :",diff,5*diff);
-            char choice;
-            scanf("%c",&choice);
-            if (choice=='y') {
-                printf("Fine paid successfully!\n");
-                member1->copiesIssued[i]->isIssued = 0;
-                strcpy(member1->copiesIssued[i]->dateIssued, "");
-                strcpy(member1->copiesIssued[i]->dueDate, "");
-                member1->noOfCopiesIssued--;
-                return 0;
-            }
+            member1->copiesIssued[i]->isIssued = 0;
+            strcpy(member1->copiesIssued[i]->dateIssued, "00/00/0000");
+            strcpy(member1->copiesIssued[i]->dueDate, "00/00/0000");
+            member1->copiesIssued[i]->memberIDIssued = -1;
+            member1->noOfCopiesIssued--;
+            for (int j = i; j < member1->noOfCopiesIssued; j++)
+                member1->copiesIssued[i] = member1->copiesIssued[i+1];
+            printf("Book returned successfully.\n\n");
+            return;
         }
     }
-    return -1;
+    return;
 }
 
-void displayIssuedBooks(struct member *member1, struct book books[], int noOfBooks, char currentDate[]) {
-    int totalfine= 0;
+void displayIssuedBooks(member *member1, book books[], int noOfBooks, char currentDate[]) {
+    /*A function to display the books issued by the current member.*/
+
+    if (member1->noOfCopiesIssued == 0) {
+        printf("You have no issued books.\n\n");
+        return;
+    }
+    int totalfine = 0;
     printf("+-----+----------------------------------------------------+--------------------------------+--------------------------------+------------------+\n");
     printf("| ID  | Name                                               | Date of Issue                  | Due Date                       | Fine Due         |\n");
     printf("+-----+----------------------------------------------------+--------------------------------+--------------------------------+------------------+\n");
@@ -97,123 +157,82 @@ void displayIssuedBooks(struct member *member1, struct book books[], int noOfBoo
         if (compareDates(member1->copiesIssued[i]->dueDate, currentDate) == 2) {
             strcpy(overdueText, "Overdue");
             fine = 5 * diffBtwDates(member1->copiesIssued[i]->dueDate, currentDate);
-            totalfine+=fine;
+            totalfine += fine;
         }
-        printf("| %3d | %50s | %-30s | %-20s %9s | Rs. %12d |\n", member1->copiesIssued[i]->bookID, getBookByID(books, noOfBooks, member1->copiesIssued[i]->bookID)->name, member1->copiesIssued[i]->dateIssued, member1->copiesIssued[i]->dueDate, overdueText, fine);
+        printf("| %3d | %-50s | %-30s | %-20s %9s | Rs. %12d |\n", member1->copiesIssued[i]->bookID, getBookByID(books, noOfBooks, member1->copiesIssued[i]->bookID)->name, member1->copiesIssued[i]->dateIssued, member1->copiesIssued[i]->dueDate, overdueText, fine);
     }
-    printf("+-----+----------------------------------------------------+--------------------------------+--------------------------------+------------------+\n");
-    printf("Total fine= Rs.%d\n",totalfine);
+    printf("+-----+----------------------------------------------------+--------------------------------+--------------------------------+------------------+\n\n");
+    printf("Total fine= Rs.%d\n\n", totalfine);
 }
 
-void changePassword(struct member *m) {
-    // to change password
-    
-    char old_password[30], new_password[30];
-    int attempts_left = MAX_ATTEMPTS;  // initialize attempts left to max
+void searchBook(book books[], int noOfBooks) {
+    /*A function that allows the member to search for a member by name.
+        It is reused in the librarian loops.*/
 
-    // prompt user to enter old password
-    printf("Enter old password: ");
-    fgets(old_password, sizeof(old_password), stdin);
-
-    // remove trailing newline character from password
-    old_password[strcspn(old_password, "\n")] = '\0';
-
-    // loop until correct old password is entered or maximum attempts reached
-    while (strcmp(old_password, m->password) != 0) {
-        attempts_left--;  // decrement attempts left
-        printf("Incorrect password (%d attempts left).\n\n", attempts_left);
-
-        // check if maximum attempts reached
-        if (attempts_left == 0) {
-            printf("Maximum attempts reached. Password change aborted.\n");
-            return;  // exit function without changing password
-        }
-
-        // prompt user to enter old password again
-        printf("Enter old password: ");
-        fgets(old_password, sizeof(old_password), stdin);
-
-        // remove trailing newline character from password
-        old_password[strcspn(old_password, "\n")] = '\0';
-    }
-
-    // if correct old password entered, prompt user to enter new password
-    printf("Enter new password: ");
-    fgets(new_password, sizeof(new_password), stdin);
-    // remove trailing newline character from password
-    new_password[strcspn(new_password, "\n")] = '\0';
-    // update password in member struct with new password
-    strcpy(m->password, new_password);
-    printf("Password changed successfully.\n");
-}
-
-void search(struct book books[], int noOfBooks){
-    struct book searchResults[100];
-    int noOfResults=0;
+    book searchResults[100];
+    int noOfResults = 0;
     char searchString[50];
     printf("Enter search keyword (title, author, genre): ");
-    scanf("%s",searchString);
-    for (int i=0;i<noOfBooks;i++){
-        if(strstr(books[i].name,searchString)!=NULL || strstr(books[i].author,searchString)!=NULL || strstr(books[i].genre,searchString)!=NULL)
+    scanf("\n%[^\n]%*c", searchString);
+    for (int i = 0; i < noOfBooks; i++) {
+        if (strstr(books[i].name, searchString) || strstr(books[i].author,searchString) || strstr(books[i].genre,searchString))
             searchResults[noOfResults++]=books[i];
     }
-    printBookList(searchResults,noOfResults);
+    if (noOfResults == 0){
+        printf("No such book found.\n\n");
+        return;
+    }
+    printBookList(searchResults, noOfResults);
 }
 
-int __memberLoop(struct book books[], int noOfBooks, struct member member1) {
-    // returns -1 to break
-		
+int __memberLoop(book books[], int noOfBooks, member *member1) {
+    /*The loop that runs indefinitely when the user logs in as a member.
+        It returns -1 on breaking.*/
+
+    // The member is required to input the date at the start of the loop.
+	char date[11];
+    int day, month, year;
+    printf("Enter the date in DD/MM/YYYY format: ");
+    scanf("%d/%d/%d", &day, &month, &year);
+    sprintf(date, "%02d/%02d/%04d", day, month, year);
+    printf("\n");
+
     int option;
 	while(1) {
         printf("Enter the corresponding number to do the following:\n");
-        printf("1. Print the list of available books\n");
+        printf("1. View the list of available books\n");
         printf("2. View the list of books issued by you\n");
-        printf("3. Issue a book\n");
-        printf("4. Return a book\n");
-        printf("5. Search for a book by title, genre or author\n");
+        printf("3. Search for a book by title, genre or author\n");
+        printf("4. Issue a book\n");
+        printf("5. Return a book\n");
         printf("6. Change your password\n");
-        printf("7. Exit\n> ");
+        printf("0. Exit\n> ");
 
 		scanf("%d", &option);
+
 	    if (option == 1) // views list of available books
             printBookList(books, noOfBooks);
-		else if (option == 2) { // allows members to view list of copies issued, due dates and fine if any
-            char date[11];
-            int day, month, year;
-            printf("Enter the date in DD/MM/YYYY format: ");
-            scanf("%d/%d/%d", &day, &month, &year);
-            sprintf(date, "%02d/%02d/%4d", day, month, year);
-            displayIssuedBooks(&member1, books, noOfBooks, date);
-        } else if (option == 3) { // allows members to issue books
-            int bookid;
-            printf("Enter the ID of the book you want to issue: ");
-            scanf("%d", &bookid);
-            char date[11];
-            int day, month, year;
-            printf("Enter the date in DD/MM/YYYY format: ");
-            scanf("%d/%d/%d", &day, &month, &year);
-            sprintf(date, "%02d/%02d/%4d", day, month, year);
-            issueBook(&member1, bookid, books, noOfBooks, date);
-		} else if (option == 4) { // allows members to return books
-            int bookid;
-            printf("Enter the ID of the book you want to return: ");
-            scanf("%d", &bookid);
-            char date[11];
-            int day, month, year;
-            printf("Enter the date in DD/MM/YYYY format: ");
-            scanf("%d/%d/%d", &day, &month, &year);
-            sprintf(date, "%02d/%02d/%4d", day, month, year);
-            returnBook(&member1, bookid, books, noOfBooks, date);
-		}
+
+		else if (option == 2) // allows members to view list of copies issued, due dates and fine if any
+            displayIssuedBooks(member1, books, noOfBooks, date);
+
+        else if (option == 3) // search for a book by name, author or genre
+            searchBook(books, noOfBooks);
+
+        else if (option == 4)  // allows members to issue books            
+            issueBook(member1, books, noOfBooks, date);
+
+        else if (option == 5)  // allows members to return books
+            returnBook(member1, books, noOfBooks, date);
+
 		else if (option == 6) // allows members to change password
-            changePassword(&member1);
-        else if (option == 7) // exit
+            changePassword(member1);
+
+        else if (option == 0) // exit
             return -1;
-        else if (option == 5) { // search for a book by name, author or genre
-            search(books,noOfBooks);
-        }
+
 		else // option is any other number
-			printf("No such option\n");
+			printf("No such option\n\n");
 	}
 
 }
