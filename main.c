@@ -9,7 +9,7 @@ void __onInit(int *noOfBooks, int *noOfMembers, book books[], member members[], 
     /*A function to be called on initiation of the program. It reads the files and puts
         their values into variables that will be referred to throughout the program.*/
 
-    readMemberList(members, noOfMembers, books, *noOfBooks);
+    readMemberList(members, noOfMembers);
     readBookList(books, noOfBooks, members, *noOfMembers);
     FILE *file1 = fopen("_password", "r");
     fscanf(file1, "%s", password);
@@ -33,7 +33,7 @@ void __choose(char passwd[], member members[], int *noOfMembers, book books[], i
     int option;
     while (1) {
         printf("Enter 1 if you are a librarian and 2 if you are a member. Enter 0 to exit.\n> ");
-        scanf("\n%c", &option);
+        scanf("\n%d", &option);
         if (option == 1) {
             int m = __librarianLogin(passwd);
             if (m == -1)
