@@ -5,7 +5,7 @@
 #include "utils.h"
 
 // Made by Harsh Modani
-void readMemberList(member members[], int *noOfMembers, book books[], int noOfBooks) {
+void readMemberList(member members[], int *noOfMembers) {
     /* A function to be called to read the file "_members".*/
 
     FILE *file1 = fopen("_members", "r");

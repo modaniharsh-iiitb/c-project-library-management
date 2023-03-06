@@ -46,9 +46,9 @@ member *getMemberByID(member members[], int n, int id);
 // from datefunctions.c
 int isLeapYear(int year);
 
-char *getDueDate(char dateIssued[]);
-
 int isValidDate(char date[]);
+
+char *getDueDate(char dateIssued[]);
 
 char *getNextDate(char date[], int n);
 
@@ -73,7 +73,7 @@ void displayIssuedBooks(member *member1, book books[], int noOfBooks, char curre
 // from io.c
 void readBookList(book books[], int *noOfBooks, member members[], int noOfMembers);
 
-void readMemberList(member members[], int *noOfMembers, book books[], int noOfBooks);
+void readMemberList(member members[], int *noOfMembers);
 
 void writeBookList(book books[], int noOfBooks);
 
