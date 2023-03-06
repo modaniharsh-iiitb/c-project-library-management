@@ -330,91 +330,193 @@ Contributions are mentioned in the comments within the code, but here is an over
 
 ### 1. IMT2022010 Divyam Sareen
 
-### datefunctions.c
+<details>
+<summary>
+<span style="font-size=18px;">datefunctions.c</span>
+</summary>
+<br>
+
 1. `int isLeapYear(int year)`
 2. `void dateConverter(char *date, int *day, int *month, int *year)`
 3. `int between0and9(char a)`
 4. `int isValidDate(char date[])`
+</details>
 
-### memberfunctions.c
-1. `member *__memberLogin(member members[], int noOfMembers)`
+<details>
+<summary>
+<span style="font-size=18px;">librarianfunctions.c</span>
+</summary>
+<br>
 
-### librarianfunctions.c
 1. `int __librarianLogin(char passwd[])`
+</details>
+
+<details>
+<summary>
+<span style="font-size=18px;">memberfunctions.c</span>
+</summary>
+<br>
+
+1. `member *__memberLogin(member members[], int noOfMembers)`
+</details>
 
 ### 2. IMT2022019 Daksh Rajesh
 
-### io.c
+<details>
+<summary>
+<span style="font-size=18px;">io.c</span>
+</summary>
+<br>
+
 1. `void writePassword(char passwd[])`
 2. `void printBookList(book books[], int noOfBooks)`
 3. `void printMemberList(member members[], int noOfMembers)`
+</details>
 
-### librarianfunctions.c
+<details>
+<summary>
+<span style="font-size=18px;">librarianfunctions.c</span>
+</summary>
+<br>
+
 1. `int __librarianLoop(book books[], int *noOfBooks, member members[], int *noOfMembers, char passwd[])`
+</details>
+
+<details>
+<summary>
+<span style="font-size=18px;">datefunctions.c</span>
+</summary>
+<br>
 
 ### memberfunctions.c
 1. `int __memberLoop(book books[], int noOfBooks, member *member1)`
+</details>
 
 ### 3. IMT2022028 Nikita Kiran
 
-### Makefile
+<span style="font-size=18px;">Makefile</span>
 
-### datefunctions.c
+<details>
+<summary>
+<span style="font-size=18px;">datefunctions.c</span>
+</summary>
+<br>
+
 1. `char *getNextDate(char date[], int n)`
 2. `char *getDueDate(char dateIssued[])`
 3. `int compareDates(char date1[], char date2[])`
 4. `int diffBtwDates(char date1[], char date2[])`
+</details>
 
-### librarianfunctions.c
+<details>
+<summary>
+<span style="font-size=18px;">librarianfunctions.c</span>
+</summary>
+<br>
+
 1. `void callAddBook(book books[], int *noOfBooks)`
 2. `void removeMember(member members[], int *noOfMembers)`
 3. `void searchMember(member members[], int noOfMembers)`
+</details>
 
-### memberfunctions.c
+<details>
+<summary>
+<span style="font-size=18px;">memberfunctions.c</span>
+</summary>
+<br>
+
 1. `void issueBook(member *member1, book books[], int noOfBooks, char date[])`
 2. `void returnBook(member *member1, book books[], int noOfBooks, char currDate[])`
 3. `void displayIssuedBooks(member *member1, book books[], int noOfBooks, char currentDate[], int isLibrarianCalling)`
+</details>
 
 ### 4. IMT2022055 Harsh Modani
 
-### README.md
+<span style="font-size=18px;">README.md</span>
 
-### io.c
+<details>
+<summary>
+<span style="font-size=18px;">io.c</span>
+</summary>
+<br>
+
 1. `void readMemberList(member members[], int *noOfMembers, book books[], int noOfBooks)`
 2. `void readBookList(book books[], int *noOfBooks, member members[], int noOfMembers)`
 3. `void writeBookList(book books[], int noOfBooks)`
 4. `void writeMemberList(member members[], int noOfMembers)`
+</details>
 
-### librarianfunctions.c
+<details>
+<summary>
+<span style="font-size=18px;">libraryfunctions.c</span>
+</summary>
+<br>
+
 1. `void callRemoveBook(book books[], int *n, member members[], int noOfMembers)`
 2. `void addMember(member members[], int *noOfMembers)`
+</details>
 
-### memberfunctions.c
+<details>
+<summary>
+<span style="font-size=18px;">memberfunctions.c</span>
+</summary>
+<br>
+
 1. `void searchBook(book books[], int noOfBooks)`
+</details>
 
 ### 5. IMT2022114 Dhruv Kothari
 
-### utils.h
+<span style="font-size=18px;">utils.h</span>
 
-### book.c
+<details>
+<summary>
+<span style="font-size=18px;">book.c</span>
+</summary>
+<br>
+
 1. `book *getBookByID(book books[], int n, int id)`
 2. `int addCopy(book *book1, int copyID)`
 3. `int addBook(book books[], int *noOfBooks, book book1)`
 4. `int copiesAvailable(book book1)`
+</details>
 
-### member.c
+<details>
+<summary>
+<span style="font-size=18px;">member.c</span>
+</summary>
+<br>
+
 1. `member *getMemberByID(member members[], int n, int id);`
+</details>
 
 ### 6. IMT2022502 Aryan Mishra
 
-### librarianfunctions.c
+<details>
+<summary>
+<span style="font-size=18px;">librarianfunctions.c</span>
+</summary>
+<br>
+
 1. `void changeLibrarianPassword(char passwd[])`
+</details>
 
-### memberfunctions.c
+<details>
+<summary>
+<span style="font-size=18px;">memberfunctions.c</span>
+</summary>
+<br>
 1. `void changePassword(member *m)`
+</details>
 
-### main.c
+<details>
+<summary>
+<span style="font-size=18px;">main.c</span>
+</summary>
+<br>
+
 1. `void __onInit(int *noOfBooks, int *noOfMembers, book books[], member members[], char password[])`
 2. `void __onClose(book books[], member members[], int noOfBooks, int noOfMembers, char passwd[])`
 3. `void __choose(char passwd[], member members[], int *noOfMembers, book books[], int *noOfBooks)`
 4. `void main()` - the main function
+</details>
