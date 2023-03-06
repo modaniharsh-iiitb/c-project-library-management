@@ -4,6 +4,7 @@
 
 #include "utils.h"
 
+// Made by Dhruv Kothari
 member *getMemberByID(member members[], int n, int id) {
     /*A function that returns a pointer to the member that has its ID equal to the input
         ID. It returns a pointer to a new member with ID -1 if no such member is found.*/

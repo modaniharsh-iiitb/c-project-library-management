@@ -4,7 +4,7 @@
 
 #include "utils.h"
 
-
+// Made by Harsh Modani
 void readMemberList(member members[], int *noOfMembers, book books[], int noOfBooks) {
     /* A function to be called to read the file "_members".*/
 
@@ -27,6 +27,7 @@ void readMemberList(member members[], int *noOfMembers, book books[], int noOfBo
     }
 }
 
+// Made by Harsh Modani
 void readBookList(book books[], int *noOfBooks, member members[], int noOfMembers) {
     /* A function to be called to read the files "_books" and "_copies".*/
 
@@ -84,6 +85,7 @@ void readBookList(book books[], int *noOfBooks, member members[], int noOfMember
     fclose(file1);
 }
 
+// Made by Harsh Modani
 void writeBookList(book books[], int noOfBooks) {
     /* A function to be called to write into the files "_books" and "_copies".*/
 
@@ -106,6 +108,7 @@ void writeBookList(book books[], int noOfBooks) {
     fclose(file1);
 }
 
+// Made by Harsh Modani
 void writeMemberList(member members[], int noOfMembers) {
     /* A function to be called to write into the file "_members".*/
 
@@ -115,6 +118,7 @@ void writeMemberList(member members[], int noOfMembers) {
     fclose(file1);
 }
 
+// Made by Daksh Rajesh
 void writePassword(char passwd[]) {
     /* A function to be called to write into the file "_password".*/
 
@@ -123,18 +127,20 @@ void writePassword(char passwd[]) {
     fclose(file1);
 }
 
+// Made by Daksh Rajesh
 void printBookList(book books[], int noOfBooks) {
     /* A function to be called to print the given list of books.*/
 
-    printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+------------------+\n");
-    printf("| ID  | Name                                               | Author                                   | Genre                | Copies Available |\n");
-    printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+------------------+\n");
+    printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+--------------+------------------+\n");
+    printf("| ID  | Name                                               | Author                                   | Genre                | Total Copies | Copies Available |\n");
+    printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+--------------+------------------+\n");
     for (int i = 0; i < noOfBooks; i++) {
-        printf("| %3d | %-50s | %-40s | %-20s | %16d |\n", books[i].id, books[i].name, books[i].author, books[i].genre, copiesAvailable(books[i]));
+        printf("| %3d | %-50s | %-40s | %-20s | %12d | %16d |\n", books[i].id, books[i].name, books[i].author, books[i].genre, books[i].noOfCopies, copiesAvailable(books[i]));
     }
-    printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+------------------+\n\n");
+    printf("+-----+----------------------------------------------------+------------------------------------------+----------------------+--------------+------------------+\n\n");
 }
 
+// Made by Daksh Rajesh
 void printMemberList(member members[], int noOfMembers) {
     /* A function to be called to print the given list of members.*/
 

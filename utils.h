@@ -1,3 +1,5 @@
+// Made by Dhruv Kothari
+
 // strucures
 typedef struct copy {
     int bookID;
@@ -46,6 +48,8 @@ int isLeapYear(int year);
 
 char *getDueDate(char dateIssued[]);
 
+int isValidDate(char date[]);
+
 char *getNextDate(char date[], int n);
 
 int compareDates(char date1[], char date2[]);
@@ -63,6 +67,8 @@ member *__memberLogin(member members[], int noOfMembers);
 int __memberLoop(book books[], int noOfBooks, member *member1);
 
 void searchBook(book books[], int noOfBooks);
+
+void displayIssuedBooks(member *member1, book books[], int noOfBooks, char currentDate[], int isLibrarianCalling);
 
 // from io.c
 void readBookList(book books[], int *noOfBooks, member members[], int noOfMembers);

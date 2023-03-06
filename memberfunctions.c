@@ -7,6 +7,7 @@
 
 #define MAX_ATTEMPTS 5  // maximum number of attempts to enter old password
 
+// Made by Divyam Sareen
 member *__memberLogin(member members[], int noOfMembers) {
     /* A function to log in as a member. This method takes in a password
         and user ID and verifies it against the member table. If the ID exists 
@@ -35,6 +36,7 @@ member *__memberLogin(member members[], int noOfMembers) {
     } 
 }
 
+// Made by Aryan Mishra
 void changePassword(member *m) {
     /* A funciton to change the member's password. This method takes in the old
         password and verifies it against the current one. If they match, the librarian
@@ -65,6 +67,7 @@ void changePassword(member *m) {
     printf("Password changed successfully.\n\n");
 }
 
+// Made by Nikita Kiran
 void issueBook(member *member1, book books[], int noOfBooks, char date[]) {
     /*A function to issue a book to a member, provided it has available copies.*/
 
@@ -101,6 +104,7 @@ void issueBook(member *member1, book books[], int noOfBooks, char date[]) {
     }
 }
 
+// Made by Nikita Kiran
 void returnBook(member *member1, book books[], int noOfBooks, char currDate[]) {
     /*A function to return a book, provided the given member has issued it.*/
 
@@ -139,10 +143,15 @@ void returnBook(member *member1, book books[], int noOfBooks, char currDate[]) {
     return;
 }
 
-void displayIssuedBooks(member *member1, book books[], int noOfBooks, char currentDate[]) {
+// Made by Nikita Kiran
+void displayIssuedBooks(member *member1, book books[], int noOfBooks, char currentDate[], int isLibrarianCalling) {
     /*A function to display the books issued by the current member.*/
 
     if (member1->noOfCopiesIssued == 0) {
+        if (isLibrarianCalling) {
+            printf("Member \"%s\" has no issued books.\n\n", member1->name);
+            return;
+        }
         printf("You have no issued books.\n\n");
         return;
     }
@@ -162,9 +171,10 @@ void displayIssuedBooks(member *member1, book books[], int noOfBooks, char curre
         printf("| %3d | %-50s | %-30s | %-20s %9s | Rs. %12d |\n", member1->copiesIssued[i]->bookID, getBookByID(books, noOfBooks, member1->copiesIssued[i]->bookID)->name, member1->copiesIssued[i]->dateIssued, member1->copiesIssued[i]->dueDate, overdueText, fine);
     }
     printf("+-----+----------------------------------------------------+--------------------------------+--------------------------------+------------------+\n\n");
-    printf("Total fine= Rs.%d\n\n", totalfine);
+    printf("Total fine = Rs. %d\n\n", totalfine);
 }
 
+// Made by Harsh Modani
 void searchBook(book books[], int noOfBooks) {
     /*A function that allows the member to search for a member by name.
         It is reused in the librarian loops.*/
@@ -185,16 +195,20 @@ void searchBook(book books[], int noOfBooks) {
     printBookList(searchResults, noOfResults);
 }
 
+// Made by Daksh Rajesh
 int __memberLoop(book books[], int noOfBooks, member *member1) {
     /*The loop that runs indefinitely when the user logs in as a member.
         It returns -1 on breaking.*/
 
     // The member is required to input the date at the start of the loop.
 	char date[11];
-    int day, month, year;
     printf("Enter the date in DD/MM/YYYY format: ");
-    scanf("%d/%d/%d", &day, &month, &year);
-    sprintf(date, "%02d/%02d/%04d", day, month, year);
+    scanf("%s", date);
+    while (!isValidDate(date)) {
+        printf("Invalid date.\n\n");
+        printf("Enter the date in DD/MM/YYYY format: ");
+        scanf("%s", date);
+    }
     printf("\n");
 
     int option;
@@ -214,7 +228,7 @@ int __memberLoop(book books[], int noOfBooks, member *member1) {
             printBookList(books, noOfBooks);
 
 		else if (option == 2) // allows members to view list of copies issued, due dates and fine if any
-            displayIssuedBooks(member1, books, noOfBooks, date);
+            displayIssuedBooks(member1, books, noOfBooks, date, 0);
 
         else if (option == 3) // search for a book by name, author or genre
             searchBook(books, noOfBooks);

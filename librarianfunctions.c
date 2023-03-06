@@ -6,6 +6,7 @@
 
 #define MAX_ATTEMPTS 5
 
+// Made by Divyam Sareen
 int __librarianLogin(char passwd[]) {
     /* A function to log in as the librarian. This method takes in a password
         and verifies it against the current one. If they match, the user is
@@ -27,6 +28,7 @@ int __librarianLogin(char passwd[]) {
     }
 }
 
+// Made by Aryan Mishra
 void changeLibrarianPassword(char passwd[]) {
     /* A function to change the librarian's password. This method takes in the old
         password and verifies it against the current one. If they match, the librarian
@@ -56,7 +58,8 @@ void changeLibrarianPassword(char passwd[]) {
     printf("Password changed successfully.\n\n");
 }
 
-void callAddBook(book books[], int *n) {
+// Made by Nikita Kiran
+void callAddBook(book books[], int *noOfBooks) {
     /*A function that allows the librarian to either add a new book altogether,
         or add a copy of a new book.*/
     
@@ -74,6 +77,10 @@ void callAddBook(book books[], int *n) {
             printf("Invalid book ID; book ID must be positive.\n");
             printf("Enter the book ID: ");
             scanf("\n%d", &(newBook.id));
+        }
+        if (getBookByID(books, *noOfBooks, newBook.id)->id != -1) {
+            printf("Book with id %d already exists.\n\n", newBook.id);
+            return;
         }
         printf("Enter the title of the book: ");
         scanf("\n%[^\n]%*c", newBook.name);
@@ -93,17 +100,17 @@ void callAddBook(book books[], int *n) {
         for (int i = 0; i < newBook.noOfCopies; i++)
             newBook.copies[i] = (copy) {.bookID = newBook.id, .copyID = (i+1), .isIssued = 0, .dateIssued = "00/00/0000", .dueDate = "00/00/0000", .memberIDIssued = -1};
 
-        int a = addBook(books, n, newBook);
+        int a = addBook(books, noOfBooks, newBook);
         if (!a)
             printf("Successfully added %d copies of the book \"%s\" to the collection.\n\n", newBook.noOfCopies, newBook.name);
         else
             printf("Unsuccessful\n\n");
     } else if (choice == 2) {
         int id;
-        printBookList(books, *n);
+        printBookList(books, *noOfBooks);
         printf("Enter the ID of the book: ");
         scanf("%d", &id);
-        book *b = getBookByID(books, *n, id);
+        book *b = getBookByID(books, *noOfBooks, id);
 
         if(b->id == -1) {
             printf("Book with ID %d does not exist.\n\n", b->id);
@@ -113,7 +120,12 @@ void callAddBook(book books[], int *n) {
         int newCopyID;
         printf("Enter the new copy ID that is to be added: ");
         scanf("%d", &newCopyID);
-
+        for(int i = 0; i < b->noOfCopies; i++){
+            if (b->copies[i].copyID == newCopyID){
+                printf("Copy of book with id %d already exists.\n\n", newCopyID);
+                return;
+            }
+        }
         int a = addCopy(b, newCopyID);
         if (!a)
             printf("Successfully added a copy of the book \"%s\".\n\n", b->name);
@@ -123,6 +135,7 @@ void callAddBook(book books[], int *n) {
         printf("Invalid option.\n\n");
 }
 
+// Made by Harsh Modani
 void callRemoveBook(book books[], int *n, member members[], int noOfMembers) {
     /*A function that allows the librarian to either remove a book altogether,
         or remove a single copy of a new book.*/
@@ -169,6 +182,7 @@ void callRemoveBook(book books[], int *n, member members[], int noOfMembers) {
     
 }
 
+// Made by Harsh Modani
 void addMember(member members[], int *noOfMembers) {
     /*A function that allows the librarian to add a new member.*/
 
@@ -197,6 +211,7 @@ void addMember(member members[], int *noOfMembers) {
     printf("Successfully added member \"%s\".\n\n", newMember.name);
 }
 
+// Made by Nikita Kiran
 void removeMember(member members[], int *noOfMembers) {
     /*A function that allows the librarian to remove a member,
         provided they do not have a copy issued.*/
@@ -231,6 +246,7 @@ void removeMember(member members[], int *noOfMembers) {
     return;
 }
 
+// Made by Nikita Kiran
 void searchMember(member members[], int noOfMembers) {
     /*A function that allows the librarian to search for a member by name.*/
 
@@ -250,7 +266,7 @@ void searchMember(member members[], int noOfMembers) {
     printMemberList(searchResults, noOfResults);
 }
 
-
+// Made by Daksh Rajesh
 int __librarianLoop(book books[], int *noOfBooks, member members[], int *noOfMembers, char passwd[]) {
     /*The loop that runs indefinitely when the user logs in as a librarian.
         It returns -1 on breaking.*/
@@ -267,6 +283,7 @@ int __librarianLoop(book books[], int *noOfBooks, member members[], int *noOfMem
         printf("7. Register a new member\n");
         printf("8. Remove a member\n");
         printf("9. Change your password\n");
+        printf("10. View books issued by a member\n");
         printf("0. Exit\n> ");
 
 		scanf("%d",&option);
@@ -297,7 +314,26 @@ int __librarianLoop(book books[], int *noOfBooks, member members[], int *noOfMem
 
 		else if (option == 9) // allows librarian to change password
             changeLibrarianPassword(passwd);
-
+        
+        else if (option == 10) { // allows librarian to see books issued by a specific member
+            int memberID;
+            printf("Enter member ID: ");
+            scanf("%d", &memberID);
+            member *m = getMemberByID(members, *noOfMembers, memberID);
+            if (m->id == -1){
+                printf("Invalid member ID.\n\n");
+                continue;
+            }
+            char date[11];
+            printf("Enter the date in DD/MM/YYYY format: ");
+            scanf("%s", date);
+            while (!isValidDate(date)) {
+                printf("Invalid date.\n\n");
+                printf("Enter the date in DD/MM/YYYY format: ");
+                scanf("%s", date);
+            }
+            displayIssuedBooks(m, books, *noOfBooks, date, 1);
+        }
 		else if (option == 0) // exit
 			return -1;
 
