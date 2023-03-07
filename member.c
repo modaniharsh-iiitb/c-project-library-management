@@ -15,5 +15,6 @@ member *getMemberByID(member members[], int n, int id) {
     }
     member *voidMember=malloc(sizeof(member));
     voidMember->id = -1;
+    voidMember->noOfCopiesIssued = 0;
     return voidMember;
 }

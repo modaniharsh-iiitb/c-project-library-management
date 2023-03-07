@@ -25,6 +25,7 @@ void readMemberList(member members[], int *noOfMembers) {
 
         members[(*noOfMembers)++] = member1;
     }
+    fclose(file1);
 }
 
 // Made by Harsh Modani
@@ -54,7 +55,7 @@ void readBookList(book books[], int *noOfBooks, member members[], int noOfMember
     }
     fclose(file1);
 
-    file1 = fopen("_copies", "r");
+    FILE *file2 = fopen("_copies", "r");
     while (fgets(buffer, 200, file1)) {
         copy copy1;
         char *token = strtok(buffer, ",");
@@ -82,7 +83,7 @@ void readBookList(book books[], int *noOfBooks, member members[], int noOfMember
         member *member1 = getMemberByID(members, noOfMembers, copy1.memberIDIssued);
         member1->copiesIssued[member1->noOfCopiesIssued++] = &(b->copies[b->noOfCopies-1]);
     }
-    fclose(file1);
+    fclose(file2);
 }
 
 // Made by Harsh Modani
