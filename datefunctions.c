@@ -36,7 +36,7 @@ int isValidDate(char date[]) {
     for (int i = 0; i < 10; i++) {
         if (i == 2 || i == 5)
             continue;
-        if (!between0and9(date[0]))
+        if (!between0and9(date[i]))
             return 0;
     }
     
