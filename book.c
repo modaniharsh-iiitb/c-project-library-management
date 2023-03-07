@@ -15,6 +15,7 @@ book *getBookByID(book books[], int n, int id) {
     }
     book *voidBook = malloc(sizeof(book));
     voidBook->id = -1;
+    voidBook->noOfCopies = 0;
     return voidBook;
 }
 
