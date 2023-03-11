@@ -135,7 +135,7 @@ void returnBook(member *member1, book books[], int noOfBooks, char currDate[]) {
             member1->copiesIssued[i]->memberIDIssued = -1;
             member1->noOfCopiesIssued--;
             for (int j = i; j < member1->noOfCopiesIssued; j++)
-                member1->copiesIssued[i] = member1->copiesIssued[i+1];
+                member1->copiesIssued[j] = member1->copiesIssued[j+1];
             printf("Book returned successfully.\n\n");
             return;
         }
